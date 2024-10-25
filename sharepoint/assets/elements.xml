@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+
+    <Field ID="{253c56a4-f543-4691-8e05-59eb0cbd7fb3}"
+            Name="key"
+            DisplayName="Key"
+            Type="Text"
+            Required="TRUE"
+            Group="Bitly Group" />
+
+    <Field ID="{d24099db-c53f-423d-b08c-9f9d17cddf22}"
+            Name="sourceUrl"
+            DisplayName="Source Url"
+            Type="Text"
+            Required="TRUE"
+            Group="Bitly Group" />
+
+    <Field ID="{fae6c037-f5cf-48b4-9884-9b4424e7bf6a}"
+            Name="createdBy"
+            DisplayName="Created By"
+            Type="Text"
+            Required="TRUE"
+            Group="Bitly Group" />
+
+    <Field ID="{1c866e27-dcac-4967-9431-f99ffe6645c9}"
+            Name="medium"
+            DisplayName="UTM Medium"
+            Type="Text"
+            Required="FALSE"
+            Group="Bitly Group" />
+
+    <Field ID="{4157532a-88f1-4677-a07d-4a43690fd270}"
+            Name="source"
+            DisplayName="UTM Source"
+            Type="Text"
+            Required="FALSE"
+            Group="Bitly Group" />
+
+    <Field ID="{fb80ad1d-2099-4663-afb3-37802ed51e2e}"
+            Name="campaign"
+            DisplayName="UTM Campaign"
+            Type="Text"
+            Required="FALSE"
+            Group="Bitly Group" />
+
+    <Field ID="{e83813ce-d58f-4d17-9a59-6aa7601dfab3}"
+            Name="term"
+            DisplayName="UTM Term"
+            Type="Text"
+            Required="FALSE"
+            Group="Bitly Group" />
+
+    <Field ID="{9b9a4c71-9e5f-47ce-ac37-711d6ace90d8}"
+            Name="content"
+            DisplayName="UTM Content"
+            Type="Text"
+            Required="FALSE"
+            Group="Bitly Group" />
+
+    <Field ID="{717cfede-ea19-4642-871f-eab15273d22a}"
+            Name="shortUrl"
+            DisplayName="Short Url"
+            Type="Text"
+            Required="FALSE"
+            Group="Bitly Group" />
+
+    <ContentType ID="0x0BE8B670B3F24674A2A622741B0B07E9"
+            Name="Bitly Hyperlinks"
+            Group="Bitly Content Types"
+            Description="Content Types for Bitly Webpart">
+        <FieldRefs>
+            <FieldRef ID="{253c56a4-f543-4691-8e05-59eb0cbd7fb3}" />
+            <FieldRef ID="{d24099db-c53f-423d-b08c-9f9d17cddf22}" />
+            <FieldRef ID="{fae6c037-f5cf-48b4-9884-9b4424e7bf6a}" />
+            <FieldRef ID="{1c866e27-dcac-4967-9431-f99ffe6645c9}" />
+            <FieldRef ID="{4157532a-88f1-4677-a07d-4a43690fd270}" />
+            <FieldRef ID="{fb80ad1d-2099-4663-afb3-37802ed51e2e}" />
+            <FieldRef ID="{e83813ce-d58f-4d17-9a59-6aa7601dfab3}" />
+            <FieldRef ID="{9b9a4c71-9e5f-47ce-ac37-711d6ace90d8}" />
+            <FieldRef ID="{717cfede-ea19-4642-871f-eab15273d22a}" />
+        </FieldRefs>
+    </ContentType>
+
+    <ListInstance
+            CustomSchema="schema.xml"
+            FeatureId="00bfea71-de22-43b2-a848-c05709900100"
+            Title="Bitly List"
+            Description="Bitly List"
+            TemplateType="100"
+            Url="Lists/BitlyList">
+    </ListInstance>
+
+</Elements>

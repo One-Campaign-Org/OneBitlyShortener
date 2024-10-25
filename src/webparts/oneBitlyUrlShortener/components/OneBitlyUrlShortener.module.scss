@@ -1,0 +1,69 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+
+.container {
+  padding: 0
+}
+
+.editModeContainer {
+  min-height: 5rem;
+  width: 100%;
+  background-color: gainsboro;
+  color: #232323
+}
+
+.editModeContainerInner {
+  text-align: left;
+  padding: 1rem;
+}
+
+.editModeContainerTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.wFull {
+  width: 100%;
+}
+
+.wFit {
+  width: fit-content;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexCol {
+  flex-direction: column;
+}
+
+.mxAuto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.myAuto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.mt5 {
+  margin-top: 1.25rem; 
+}
+
+.hAuto {
+  height: auto;
+}
+
+.h60 {
+  height: 15rem;
+}
+
+.gap2 {
+  gap: 0.5rem;
+}
+
+.textRed {
+  color: red;
+}

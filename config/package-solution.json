@@ -1,0 +1,50 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "Bitly Hyperlink Shortener",
+    "id": "dc33c590-ecae-4d12-9c64-7ac742e3809a",
+    "version": "1.0.0.20",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+    ],
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.19.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Use to generated short URLs using the Bitly service"
+      },
+      "longDescription": {
+        "default": "Use to generated short URLs using the Bitly service with embedded utm codes"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Bitly Generator Features",
+        "description": "The feature that activates elements of the one-bitly-shortener solution.",
+        "id": "fa1505fc-cde3-4dbb-b43e-db21d68e5d34",
+        "version": "1.0.0.0",
+        "assets": {
+          "elementFiles": [
+            "schema.xml"
+          ],
+          "elementManifests": [
+            "elements.xml"
+          ]
+        }
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/one-bitly-shortener.sppkg"
+  }
+}
