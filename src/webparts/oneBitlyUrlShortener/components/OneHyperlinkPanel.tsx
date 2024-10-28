@@ -12,7 +12,9 @@ import {
     MessageBarType,
     StackItem,
     TooltipHost,
-    Link
+    Link,
+    Dropdown,
+    IDropdownOption
   } from '@fluentui/react';
 import { Copy16Filled } from "@fluentui/react-icons";
 import styles from './OneBitlyUrlShortener.module.scss';
@@ -46,6 +48,10 @@ function isValidUrl(sourceUrl: string): boolean {
     return regEx.test(sourceUrl);
 }
 /* eslint-enable no-useless-escape */
+
+function hasAllRequiredValues(hyperlink: string, campaign: string, source: string): boolean {
+    return (isValidUrl(hyperlink) && campaign.length > 0 && source.length > 0);
+}
 
 function downloadStringAsFile(data: string, filename: string):void {
     const a = document.createElement('a');
@@ -140,7 +146,15 @@ async function saveNewShortLinkToSharepoint(item: IBitlyListItem): Promise<boole
 
 // ====================================================================
 
-export default function OneHyperlinkPanel({apiToken, createdBy, item, onSave, onClose}: IOneHyperlinkPanelProps): JSX.Element {
+export default function OneHyperlinkPanel({
+    apiToken, 
+    createdBy, 
+    item, 
+    utmCampaignValues,
+    utmSourceValues,
+    utmMediumValues,
+    onSave, 
+    onClose}: IOneHyperlinkPanelProps): JSX.Element {
 
     const qrCanvasRef = useRef<HTMLCanvasElement>();
     //
@@ -161,6 +175,22 @@ export default function OneHyperlinkPanel({apiToken, createdBy, item, onSave, on
 
     // =========
 
+    const onUtmCampaignChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
+        const selectedItem: string = item.text;
+        setUtmCampaign(selectedItem);
+        setCanSave(hasAllRequiredValues(sourceUrl, selectedItem, utmSource));
+    };
+
+    const onUtmSourceChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
+        const selectedItem: string = item.text;
+        setUtmSource(selectedItem);
+        setCanSave(hasAllRequiredValues(sourceUrl, utmCampaign, selectedItem));
+    };
+
+    const onUtmMediumChange = (event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void => {
+        setUtmMedium(item.text);
+    };
+
     const handleDownloadQRCode = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
         const node = qrCanvasRef.current;
@@ -177,7 +207,7 @@ export default function OneHyperlinkPanel({apiToken, createdBy, item, onSave, on
         setCanSave(false);
         setSaveButtonLabel(SAVING_BUTTON_LABEL);
 
-        if(isValidUrl(sourceUrl) === false) {
+        if(hasAllRequiredValues(sourceUrl, utmCampaign, utmSource) === false) {
             setSaveState(false);
             return;
         }
@@ -235,7 +265,7 @@ export default function OneHyperlinkPanel({apiToken, createdBy, item, onSave, on
     const handleHyperlinkChanged = (e: React.FormEvent<HTMLInputElement>): void => {
         const hyperlinkText: string = e.currentTarget.value;
         setSourceUrl(hyperlinkText);
-        setCanSave(isValidUrl(hyperlinkText));
+        setCanSave(hasAllRequiredValues(hyperlinkText, utmCampaign, utmSource));
     } 
 
     const handleCopyToClipboard = (value: string): void => {
@@ -304,23 +334,49 @@ export default function OneHyperlinkPanel({apiToken, createdBy, item, onSave, on
                         <React.Fragment>
                             <p>Complete the fields and press save to generate a new shortened hyperlink.</p>
                             <TextField name="hyperlink" label="URL" prefix="https://" required ariaLabel="Required URL hyperlink" onChange={handleHyperlinkChanged} />
-                            <h3>Optional UTM Values:</h3>
-                            <TextField name="utm_medium" label="Medium" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmMedium(e.currentTarget.value)} />
-                            <TextField name="utm_source" label="Source" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmSource(e.currentTarget.value)} />
-                            <TextField name="utm_campaign" label="Campaign" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmCampaign(e.currentTarget.value)} />
+                            <Dropdown
+                                id="utm_campaign"
+                                ariaLabel="Required UTM Campaign value"
+                                required
+                                label="UTM Campaign"
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onChange={onUtmCampaignChange}
+                                placeholder="Select a campaign"
+                                options={utmCampaignValues}
+                                />
+                            <Dropdown
+                                id="utm_source"
+                                ariaLabel="Required UTM Source value"
+                                required
+                                label="UTM Source"
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onChange={onUtmSourceChange}
+                                placeholder="Select a source"
+                                options={utmSourceValues}
+                                />
+                            <b>Optional UTM Values:</b>
+                            <Dropdown
+                                id="utm_medium"
+                                label="UTM Medium"
+                                ariaLabel="UTM Medium value"
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onChange={onUtmMediumChange}
+                                placeholder="Select a medium"
+                                options={utmMediumValues}
+                                />
                             <TextField name="utm_term" label="Term" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmTerm(e.currentTarget.value)} />
                             <TextField name="utm_content" label="Content" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmContent(e.currentTarget.value)} />
                         </React.Fragment>
                         ) : (
                         <React.Fragment>
                             <h3>Here&apos;s your shortened URL:</h3>
-                            <div>
+                            <div className={`${styles.flex} ${styles.flexRow} ${styles.gap2}`}>
                                 <span>{shortUrl}</span>
                                 <TooltipHost content={`${strings.CopyToClipboardMessage}`}>
                                     <Link onClick={(e) => handleCopyToClipboard(shortUrl)}>
                                         <Copy16Filled width={16} height={16} />
                                     </Link>
-                                    { copied ? <span className={styles.textRed}>Copied!</span> : null }              
+                                    { copied ? <span className={`${styles.textRed}`}>Copied!</span> : null }              
                                 </TooltipHost>
                             </div>
 

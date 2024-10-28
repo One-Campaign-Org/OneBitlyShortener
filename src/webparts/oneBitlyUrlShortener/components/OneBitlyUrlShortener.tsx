@@ -7,7 +7,7 @@ import * as strings from 'OneBitlyUrlShortenerWebPartStrings';
 import OneBitlyDetailList from './OneBitlyDetailList';
 //import OneBitlyItemPanel from './OneBitlyItemPanel';
 import { useBoolean } from '@fluentui/react-hooks';
-import { IBitlyListItem } from '../interfaces';
+import { IBitlyListItem, IDropDownItem } from '../interfaces';
 import { 
   Panel,
   CommandBar, ICommandBarItemProps
@@ -16,6 +16,13 @@ import { getSP } from '../../pnpjs-config';
 import OneHyperlinkPanel from './OneHyperlinkPanel';
 
 const SHAREPOINT_LIST_NAME = "Bitly List";
+const SHAREPOINT_UTM_CAMPAIGN_NAME = "Bitly_Utm_Campaign";
+const SHAREPOINT_UTM_SOURCE_NAME = "Bitly_Utm_Source";
+const SHAREPOINT_UTM_MEDIUM_NAME = "Bitly_Utm_Medium";
+
+export interface IBitlyUtmListItem {
+  Title: string
+}
 
 // =============================================================================
 
@@ -28,26 +35,11 @@ export default function OneBitlyUrlShortener({ inEditMode, userName, bitlyApiKey
   // maintains a local copy of the bitly links maintained as a list in Sharepoint
   const [bitlyItems, setBitlyItems] = useState<IBitlyListItem[]>([]);
 
+  const [utmCampaignValues, setUtmCampaignValues] = useState<IDropDownItem[]>([]);
+  const [utmSourceValues, setUtmSourceValues] = useState<IDropDownItem[]>([]);
+  const [utmMediumValues, setUtmMediumValues] = useState<IDropDownItem[]>([]);
+
   // == event handlers ===================================================
-
-/*
-{
-  "created_at":"2024-10-24T17:11:08+0000",
-  "id":"go.one.org/4hf0bDn",
-  "link":"https://go.one.org/4hf0bDn",
-  "custom_bitlinks":[],
-  "long_url":"https://intranet.one.org/?utm_campaign=james",
-  "archived":false,
-  "tags":[],
-  "deeplinks":[],
-  "references":{"group":"https://api-ssl.bitly.com/v4/groups/B9bafsbR0st"}}
-
-  interface IBitlyResponse {
-    id: string,
-    link: string,
-    long_url: string
-  }
-*/
 
   const handleAddClicked = (): void => {
     // state object that is passed to the info panel
@@ -96,25 +88,60 @@ export default function OneBitlyUrlShortener({ inEditMode, userName, bitlyApiKey
   useEffect(() => {
 
     const fetchData = async (): Promise<void> => {
-      console.log("fetching items");
+      console.log("fetching list items");
+      const result = await getSP()?.web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.select()();
+      if(result) {
+        const items: IBitlyListItem[] = result.map((item: IBitlyListItem) => {
+          return {
+            key: item.key,
+            sourceUrl: item.sourceUrl,
+            createdBy: item.createdBy,
+            medium: item.medium,
+            source: item.source,
+            campaign: item.campaign,
+            term: item.term,
+            content: item.content,
+            shortUrl: item.shortUrl
+          }
+        });
+        setBitlyItems(items);
+      }
 
-        const result = await getSP()?.web.lists.getByTitle(SHAREPOINT_LIST_NAME).items.select()();
-        if(result) {
-          const items: IBitlyListItem[] = result.map((item: IBitlyListItem) => {
-            return {
-              key: item.key,
-              sourceUrl: item.sourceUrl,
-              createdBy: item.createdBy,
-              medium: item.medium,
-              source: item.source,
-              campaign: item.campaign,
-              term: item.term,
-              content: item.content,
-              shortUrl: item.shortUrl
-            }
-          });
-          setBitlyItems(items);
-        }
+      // utm campaign codes
+      const resultCampaign = await getSP()?.web.lists.getByTitle(SHAREPOINT_UTM_CAMPAIGN_NAME).items.select()();
+      if(resultCampaign) {
+        const items: IDropDownItem[] = resultCampaign.map((item: IBitlyUtmListItem, index: number) => {
+          return {
+            key: index.toString(),
+            text: item.Title
+          }
+        });
+        setUtmCampaignValues(items);        
+      }
+
+      // utm source codes
+      const resultSource = await getSP()?.web.lists.getByTitle(SHAREPOINT_UTM_SOURCE_NAME).items.select()();
+      if(resultSource) {
+        const items: IDropDownItem[] = resultSource.map((item: IBitlyUtmListItem, index: number) => {
+          return {
+            key: index.toString(),
+            text: item.Title
+          }
+        });
+        setUtmSourceValues(items);
+      }
+      
+      // utm medium codes
+      const resultMedium = await getSP()?.web.lists.getByTitle(SHAREPOINT_UTM_MEDIUM_NAME).items.select()();
+      if(resultMedium) {
+        const items: IDropDownItem[] = resultMedium.map((item: IBitlyUtmListItem, index: number) => {
+          return {
+            key: index.toString(),
+            text: item.Title
+          }
+        });
+        setUtmMediumValues(items);
+      }
     }       
       
     if (!inEditMode) fetchData().catch(console.error);
@@ -133,8 +160,15 @@ export default function OneBitlyUrlShortener({ inEditMode, userName, bitlyApiKey
           // at the bottom of the page
           isFooterAtBottom={true}
       >
-       <OneHyperlinkPanel item={selectedBitlyItem} onSave={handleSaveBitlyItemClicked}
-          onClose={handleDismissPanel} apiToken={bitlyApiKey} createdBy={userName} /> 
+       <OneHyperlinkPanel 
+          item={selectedBitlyItem} 
+          onSave={handleSaveBitlyItemClicked}
+          onClose={handleDismissPanel} 
+          utmCampaignValues={utmCampaignValues}
+          utmSourceValues={utmSourceValues}
+          utmMediumValues={utmMediumValues}
+          apiToken={bitlyApiKey} 
+          createdBy={userName} /> 
       </Panel>
       { 
         inEditMode && (
