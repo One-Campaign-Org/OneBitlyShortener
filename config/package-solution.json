@@ -3,7 +3,7 @@
   "solution": {
     "name": "Bitly Hyperlink Shortener",
     "id": "dc33c590-ecae-4d12-9c64-7ac742e3809a",
-    "version": "1.0.0.25",
+    "version": "1.0.0.26",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

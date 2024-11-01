@@ -81,17 +81,17 @@ function createFormattedUrl(item: IBitlyListItem): string {
     let formattedUrl: string = completeUrl
 
     if(item.campaign.length > 0 ||
-      item.content.length > 0 ||
+      /*item.content.length > 0 || */
       item.medium.length > 0 ||
-      item.source.length > 0 ||
-      item.term.length > 0) {
+      item.source.length > 0 /*||
+      item.term.length > 0*/) {
       
         formattedUrl += "?";
         formattedUrl += appendQueryStringParam(formattedUrl, "utm_campaign", item.campaign);
         formattedUrl += appendQueryStringParam(formattedUrl, "utm_medium", item.medium);
         formattedUrl += appendQueryStringParam(formattedUrl, "utm_source", item.source);
-        formattedUrl += appendQueryStringParam(formattedUrl, "utm_term", item.term);
-        formattedUrl += appendQueryStringParam(formattedUrl, "utm_content", item.content);
+        //formattedUrl += appendQueryStringParam(formattedUrl, "utm_term", item.term);
+        ///formattedUrl += appendQueryStringParam(formattedUrl, "utm_content", item.content);
     }
 
     console.log(`Complete Url: ${formattedUrl}`);
@@ -166,8 +166,8 @@ export default function OneHyperlinkPanel({
     const [utmMedium, setUtmMedium] = useState<string>("");
     const [utmSource, setUtmSource] = useState<string>("");
     const [utmCampaign, setUtmCampaign] = useState<string>("");
-    const [utmTerm, setUtmTerm] = useState<string>("");
-    const [utmContent, setUtmContent] = useState<string>("");
+    //const [utmTerm, setUtmTerm] = useState<string>("");
+    //const [utmContent, setUtmContent] = useState<string>("");
     // 
     const [shortUrl, setShortUrl] = useState<string>();
     // used to present the notification message on save
@@ -238,8 +238,8 @@ export default function OneHyperlinkPanel({
                 medium: utmMedium,
                 source: utmSource,
                 campaign: utmCampaign,
-                term: utmTerm,
-                content: utmContent,
+                //term: utmTerm,
+                //content: utmContent,
                 createdBy: createdBy
             } as IBitlyListItem
 
@@ -288,8 +288,8 @@ export default function OneHyperlinkPanel({
             setUtmMedium(item.medium);
             setUtmSource(item.source);
             setUtmCampaign(item.campaign);
-            setUtmTerm(item.term);
-            setUtmContent(item.content);
+            //setUtmTerm(item.term);
+            //setUtmContent(item.content);
             setShortUrl(item.shortUrl);
         }
         else {
@@ -364,8 +364,6 @@ export default function OneHyperlinkPanel({
                                 placeholder="Select a medium"
                                 options={utmMediumValues}
                                 />
-                            <TextField name="utm_term" label="Term" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmTerm(e.currentTarget.value)} />
-                            <TextField name="utm_content" label="Content" onChange={(e: React.FormEvent<HTMLInputElement>) => setUtmContent(e.currentTarget.value)} />
                         </React.Fragment>
                         ) : (
                         <React.Fragment>

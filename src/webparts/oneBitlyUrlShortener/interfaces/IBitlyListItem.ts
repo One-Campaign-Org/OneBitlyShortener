@@ -6,8 +6,8 @@ export interface IBitlyListItem {
     medium: string;
     source: string;
     campaign: string;
-    term: string;
-    content: string;
+    term?: string;
+    content?: string;
     shortUrl: string;
     successStatus?: boolean;
     errorMessage?: string;
